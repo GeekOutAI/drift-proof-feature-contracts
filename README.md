@@ -93,10 +93,13 @@ This is the recommended layout, not a required one:
 
 ```
 <repo-root>/
-  templates/
-  examples/
   assets/
-  docs/
+  examples/
+  templates/
+  CODE_OF_CONDUCT.md
+  CONTRIBUTING.md
+  LICENSE
+  README.md
   .github/
 
 ```
