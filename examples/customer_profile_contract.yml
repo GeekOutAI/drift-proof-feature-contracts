@@ -1,1 +1,141 @@
+feature:
+  name: "customer_profile"
+  version: "v1"
+  status: "active"
+  owner: "Customer Analytics Team"
+  steward: "Data Platform Team"
+  business_purpose: "Provide a stable, governed set of customer behavioral features for churn prediction and lifetime value models."
+  consumers:
+    - "churn_prediction_model"
+    - "customer_segmentation_service"
+    - "retention_scoring_pipeline"
+
+entity:
+  primary_entity: "customer_id"
+  join_keys:
+    - "customer_id"
+  uniqueness_expectation: "1:1"
+  join_type: "left"
+  join_failure_policy: "default"
+  expected_match_rate_min: 0.98
+  fanout_policy: "If multiple records exist for a customer_id, select the most recent record by event_timestamp."
+
+time_semantics:
+  event_timestamp_field: "event_timestamp"
+  timezone: "UTC"
+  point_in_time_correctness: true
+  lookback_window: "30d"
+  allowed_lateness: "24h"
+  leakage_guardrails: "Exclude any records with timestamps greater than the prediction time."
+
+lineage:
+  sources:
+    - system: "data_warehouse"
+      object: "analytics.customer_events"
+      owner: "Data Engineering"
+  refresh_cadence: "hourly"
+  upstream_dependencies:
+    - "customer_events_ingestion_job"
+    - "customer_activity_dbt_model"
+  lineage_url: "https://catalog.company.com/lineage/customer_profile"
+
+definition:
+  human_readable: "Aggregated behavioral metrics representing recent customer activity over a rolling 30-day window."
+  aggregation: "rolling window aggregations"
+  filters: "Only active customers with at least one event in the last 30 days."
+  dedup_rules: "Latest event per customer_id per day."
+  edge_cases: "If no events exist in the window, apply default zero values."
+
+schema:
+  type: "struct"
+  units: "mixed"
+  nullable: false
+  default_value: 0
+  allowed_range:
+    avg_order_value_30d:
+      min: 0
+      max: 10000
+    orders_30d:
+      min: 0
+      max: 1000
+    sessions_30d:
+      min: 0
+      max: 10000
+  allowed_values: []
+
+data_quality:
+  completeness_null_rate_max: 0.01
+  validity_checks:
+    - type: "non_negative"
+      fields:
+        - "avg_order_value_30d"
+        - "orders_30d"
+        - "sessions_30d"
+  uniqueness_required: true
+  consistency_checks:
+    - "orders_30d >= distinct_order_days_30d"
+  outlier_policy: "flag"
+  freshness_max_age: "2h"
+  cardinality_checks:
+    join_match_rate_min: 0.98
+    fanout_ratio_max: 1.01
+
+monitoring:
+  baseline_window: "30d"
+  drift_metrics:
+    - name: "psi"
+      warn_threshold: 0.1
+      fail_threshold: 0.2
+  semantic_drift_checks:
+    - "Detect changes to aggregation logic or window size."
+  join_drift_checks:
+    - "Monitor join match rate."
+    - "Detect duplicate customer_id occurrences."
+  alert_channels:
+    - "#ml-alerts"
+
+parity:
+  offline_path: "data_warehouse.customer_features_offline"
+  online_path: "feature_store.customer_profile_v1"
+  parity_required: true
+  shadow_compare: true
+  acceptable_delta: "1%"
+
+security:
+  data_classification: "internal"
+  pii_present: true
+  masking_strategy: "customer_id hashed in training datasets"
+  retention_policy: "365d"
+  approved_consumers:
+    - "ML Platform"
+    - "Marketing Analytics"
+  audit_required: true
+
+change_control:
+  served_versions_immutable: true
+  breaking_change_requires_new_version: true
+  deprecation_plan: "v1 will be supported for 90 days after v2 release."
+  rollback_plan: "Switch feature service pointer to previous version."
+  changelog:
+    - version: "v1"
+      date: "2026-01-01"
+      changes:
+        - "Initial release"
+
+tests:
+  unit_tests:
+    - "validate_rolling_window_aggregation"
+    - "validate_default_values"
+  backfill_validation: true
+  canary_materialization: true
+  shadow_reads: true
+  performance:
+    max_p95_latency_ms: 50
+    max_error_rate: 0.001
+
+signoff:
+  data_owner: "J. Smith"
+  ml_owner: "A. Johnson"
+  platform_owner: "Platform Lead"
+  approval_date: "2026-01-01"
 
