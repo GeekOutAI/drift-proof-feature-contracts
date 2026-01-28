@@ -1,1 +1,128 @@
+feature:
+  name: "<feature_name>"
+  version: "v1"
+  status: "draft"   # draft | active | deprecated
+  owner: "<team_or_person>"
+  steward: "<backup_owner>"
+  business_purpose: "<what decision or outcome this feature supports>"
+  consumers:
+    - "<model_or_service_name>"
+
+entity:
+  primary_entity: "<entity_name>"
+  join_keys:
+    - "<key1>"
+  uniqueness_expectation: "1:1"   # 1:1 | 1:many
+  join_type: "left"               # left | inner | other
+  join_failure_policy: "default"  # drop | default | quarantine
+  expected_match_rate_min: 0.98
+  fanout_policy: "<how duplicates are handled>"
+
+time_semantics:
+  event_timestamp_field: "<field_name>"
+  timezone: "UTC"
+  point_in_time_correctness: true
+  lookback_window: "30d"
+  allowed_lateness: "24h"
+  leakage_guardrails: "<how future data is prevented>"
+
+lineage:
+  sources:
+    - system: "<system_name>"
+      object: "<db.schema.table_or_topic>"
+      owner: "<source_owner_team>"
+  refresh_cadence: "hourly"   # real-time | hourly | daily | batch
+  upstream_dependencies:
+    - "<pipeline_or_dbt_model>"
+  lineage_url: "<optional_catalog_link>"
+
+definition:
+  human_readable: "<plain English definition>"
+  aggregation: "<sum|avg|count|max|window>"
+  filters: "<eligibility rules>"
+  dedup_rules: "<dedup logic>"
+  edge_cases: "<nulls, missing joins, partial history>"
+
+schema:
+  type: "float"   # int | float | string | bool | enum | array | struct
+  units: "<USD|seconds|count>"
+  nullable: false
+  default_value: 0.0
+  allowed_range:
+    min: 0.0
+    max: 10000.0
+  allowed_values: []   # for enums / categorical features
+
+data_quality:
+  completeness_null_rate_max: 0.01
+  validity_checks:
+    - type: "range"
+      field: "<feature_name>"
+      min: 0.0
+      max: 10000.0
+  uniqueness_required: true
+  consistency_checks:
+    - "<cross-field invariant>"
+  outlier_policy: "flag"   # flag | clip | winsorize
+  freshness_max_age: "2h"
+  cardinality_checks:
+    join_match_rate_min: 0.98
+    fanout_ratio_max: 1.01
+
+monitoring:
+  baseline_window: "30d"
+  drift_metrics:
+    - name: "psi"
+      warn_threshold: 0.1
+      fail_threshold: 0.2
+  semantic_drift_checks:
+    - "<definition or invariant>"
+  join_drift_checks:
+    - "<match rate>"
+    - "<duplicate keys>"
+  alert_channels:
+    - "<slack_channel_or_pagerduty>"
+
+parity:
+  offline_path: "<offline_computation_location>"
+  online_path: "<online_feature_store_location>"
+  parity_required: true
+  shadow_compare: true
+  acceptable_delta: "1%"
+
+security:
+  data_classification: "internal"  # public | internal | confidential | restricted
+  pii_present: false
+  masking_strategy: "<none|hash|tokenize>"
+  retention_policy: "365d"
+  approved_consumers:
+    - "<team_or_service>"
+  audit_required: false
+
+change_control:
+  served_versions_immutable: true
+  breaking_change_requires_new_version: true
+  deprecation_plan: "<timeline + communication>"
+  rollback_plan: "<feature service pointer switch>"
+  changelog:
+    - version: "v1"
+      date: "<YYYY-MM-DD>"
+      changes:
+        - "Initial release"
+
+tests:
+  unit_tests:
+    - "<logic test name>"
+  backfill_validation: true
+  canary_materialization: true
+  shadow_reads: true
+  performance:
+    max_p95_latency_ms: 50
+    max_error_rate: 0.001
+
+signoff:
+  data_owner: "<name>"
+  ml_owner: "<name>"
+  platform_owner: "<name>"
+  approval_date: "<YYYY-MM-DD>"
 
