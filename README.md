@@ -92,18 +92,13 @@ It is intentionally platform-agnostic:
 This is the recommended layout, not a required one:
 
 ```
-drift-proof-feature-contracts/
-├── templates/
-│   ├── feature_contract_template.md
-│   └── feature_contract_template.yml
-├── examples/
-│   ├── customer_profile_contract.md
-│   └── customer_profile_contract.yml
-├── assets/
-│   └── drift-proof-pattern.png
-├── README.md
-├── LICENSE
-└── CONTRIBUTING.md
+<repo-root>/
+  templates/
+  examples/
+  assets/
+  docs/
+  .github/
+
 ```
 
 ## How Teams Use This
