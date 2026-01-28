@@ -33,6 +33,9 @@ Not more reactive monitoring.
 
 ## What Is a Feature Contract?
 
+![Feature Contract Schema](assets/feature-contract-schema.png)
+
+
 A Feature Contract is a formal, versioned specification that defines:
 
 - ownership and accountability  
