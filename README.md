@@ -1,5 +1,5 @@
 # Drift-Proof Feature Contracts
-![Feature Contract Validation](https://github.com/GeekOutAI/drift-proof-feature-contracts/actions/workflows/feature-contract-check.yml/badge.svg)
+![Feature Contract Validation](https://github.com/GeekOutAI/drift-proof-feature-contracts/actions/workflows/feature-contract-check.yml/badge.svg) 
 
 
 ![Drift-Proof Feature Contracts](assets/hero-drift-proof-feature-contracts.png)
