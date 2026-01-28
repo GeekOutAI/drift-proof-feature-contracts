@@ -95,15 +95,26 @@ It is intentionally platform-agnostic:
 This is the recommended layout, not a required one:
 
 ```
-<repo-root>/
+drift-proof-feature-contracts/
   assets/
-  examples/
+    architecture-drift-proof-pattern.png
+    feature-contract-schema.png
+    hero-drift-proof-feature-contracts.png
   templates/
-  CODE_OF_CONDUCT.md
-  CONTRIBUTING.md
-  LICENSE
-  README.md
+    feature_contract_template.md
+    feature_contract_template.yml
+  examples/
+    customer_profile_contract.md
+    customer_profile_contract.yml
   .github/
+    workflows/
+      feature-contract-check.yml
+    scripts/
+      validate_feature_contracts.py
+  README.md
+  CONTRIBUTING.md
+  CODE_OF_CONDUCT.md
+  LICENSE
 
 ```
 
