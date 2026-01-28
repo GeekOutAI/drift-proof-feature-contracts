@@ -1,5 +1,8 @@
 # Drift-Proof Feature Contracts
 
+![Drift-Proof Feature Contracts](assets/hero-drift-proof-feature-contracts.png)
+
+
 > **A practical open standard for building drift-proof feature stores using enforceable metadata contracts.**  
 > Because most ML failures are not model failures — they’re metadata failures.
 
@@ -49,6 +52,8 @@ In other words:
 ---
 
 ## The Drift-Proof Pattern
+
+![Drift-Proof Pattern](assets/architecture-drift-proof-pattern.png)
 
 The core architecture pattern looks like this:
 
