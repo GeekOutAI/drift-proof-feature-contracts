@@ -4,7 +4,10 @@ on:
   pull_request:
     paths:
       - "templates/**/*.yml"
+      - "templates/**/*.yaml"
       - "examples/**/*.yml"
+      - "examples/**/*.yaml"
+      - ".github/scripts/validate_feature_contracts.py"
 
 jobs:
   validate-feature-contracts:
